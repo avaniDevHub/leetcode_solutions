@@ -1,14 +1,28 @@
 class Solution {
     public boolean canConstruct(String ransomNote, String magazine) {
-        StringBuilder sb= new StringBuilder(magazine);
-        for(int i=0;i<ransomNote.length(); i++)
-        {
-            char ch=ransomNote.charAt(i);
-            int index=(sb.indexOf(String.valueOf(ch)));
-            if(index==-1) return false;
+        char[] r= ransomNote.toCharArray();
+        char[] m= magazine.toCharArray();
 
-            sb.deleteCharAt(index);
+        Arrays.sort(r);
+        Arrays.sort(m);
+
+        int i=0; int j=0;
+        while(i<r.length && j<m.length)
+        {
+            if(r[i]==m[j])
+            {
+                i++;
+                j++;
+            }
+            else if(r[i]>m[j])
+            {
+                j++;
+            }
+            else
+                return false;
+
         }
-        return true;
+
+        return i==r.length;
     }
 }
