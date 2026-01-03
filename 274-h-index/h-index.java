@@ -8,6 +8,8 @@ class Solution {
             {
                 ans++;
             }
+            else
+                break;
         }
         return ans;
     }
