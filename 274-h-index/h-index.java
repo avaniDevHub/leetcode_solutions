@@ -14,3 +14,5 @@ class Solution {
         return ans;
     }
 }
+
+//max number nikalna hai where the frequency of that number is greater than number itself
