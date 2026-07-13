@@ -15,20 +15,24 @@
  */
 class Solution {
     public boolean isBalanced(TreeNode root) {
-        if (root == null) return true;
-
-        // Calculate height of left and right subtrees
-        int leftHeight = height(root.left);
-        int rightHeight = height(root.right);
-
-        // Check if current node is balanced AND subtrees are balanced
-        return Math.abs(leftHeight - rightHeight) <= 1 
-               && isBalanced(root.left) 
-               && isBalanced(root.right);
+        return checkHeight(root) != -1;
     }
 
-    private int height(TreeNode node) {
+    private int checkHeight(TreeNode node) {
         if (node == null) return 0;
-        return 1 + Math.max(height(node.left), height(node.right));
+
+        // Check left subtree
+        int leftH = checkHeight(node.left);
+        if (leftH == -1) return -1; // Propagate imbalance
+
+        // Check right subtree
+        int rightH = checkHeight(node.right);
+        if (rightH == -1) return -1; // Propagate imbalance
+
+        // Current node balance check
+        if (Math.abs(leftH - rightH) > 1) return -1;
+
+        // If balanced, return the height
+        return Math.max(leftH, rightH) + 1;
     }
 }
