@@ -1,50 +1,40 @@
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+
 class Solution {
-    //set to keep track of all unique combinations
-    private Set<List<Integer>> s= new HashSet<>();
-
-//helper method
-    private void getAllCombinations(int[] arr, int idx, int target,List<List<Integer>> ans, List<Integer> combn)
-    {
-        //base case 
-        if(idx == arr.length || target<0)
-        {
-            return;
-        }
-
-        if(target == 0)
-        {
-            // Push combination to ans only if it's unique
-            if(!s.contains(combn))
-            {
-                ans.add(new ArrayList<>(combn));
-                s.add(new ArrayList<>(combn));
-            }
-            return;
-        }
-
-        //single inclusion choice
-        combn.add(arr[idx]);
-        getAllCombinations(arr, idx+1, target-arr[idx],ans, combn);
-
-        // --- Multiple Inclusion Choice ---
-        getAllCombinations(arr, idx, target - arr[idx], ans, combn);
-
-        // --- Backtracking Step ---
-        combn.remove(combn.size() - 1);
-
-        // --- Exclusion Choice ---
-        getAllCombinations(arr, idx + 1, target, ans, combn);
-    }
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        List<List<Integer>> ans = new ArrayList<>();
-        List<Integer> combn = new ArrayList<>();
+        List<List<Integer>> result = new ArrayList<>();
+        
+        // Sorting allows early pruning (optimization)
+        Arrays.sort(candidates);
+        
+        backtrack(candidates, target, 0, new ArrayList<>(), result);
+        return result;
+    }
 
-        getAllCombinations(candidates, 0, target, ans, combn);
+    private void backtrack(int[] candidates, int remain, int start, List<Integer> current, List<List<Integer>> result) {
+        // Base case: combination found
+        if (remain == 0) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
 
-        return ans;
+        for (int i = start; i < candidates.length; i++) {
+            // Early Pruning: Since array is sorted, if current candidate exceeds 
+            // the remaining target, further numbers will also exceed it.
+            if (remain - candidates[i] < 0) {
+                break;
+            }
+
+            // Choose candidate
+            current.add(candidates[i]);
+
+            // Recurse with index 'i' because we can reuse the same element
+            backtrack(candidates, remain - candidates[i], i, current, result);
+
+            // Undo choice (Backtrack)
+            current.remove(current.size() - 1);
+        }
     }
 }
