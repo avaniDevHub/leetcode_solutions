@@ -1,39 +1,33 @@
 class Solution {
     public String shortestCompletingWord(String licensePlate, String[] words) {
-        licensePlate= licensePlate.toLowerCase();
-        HashMap<Character, Integer> map= new HashMap<>();
-        for(char c: licensePlate.toCharArray())
-        {
-            if(Character.isLetter(c))
-            {
-                map.put(c,map.getOrDefault(c,0)+1);
+        int[] target = new int[26];
+        for (char c : licensePlate.toCharArray()) {
+            if (Character.isLetter(c)) {
+                target[Character.toLowerCase(c) - 'a']++;
             }
         }
-        String res="";
-        for(String x:words)
-        {
-            x=x.toLowerCase();
-            boolean b=true;
-            for(char ch: map.keySet())
-            {
-                int count=0;
-                for(char c: x.toCharArray())
-                {
-                    if(c==ch) count++;
-                }
-                if(count<map.get(ch))
-                {
-                    b= false;
+
+        String res = null;
+
+        for (String x : words) {
+            if (res != null && x.length() >= res.length()) continue; // Skip longer words early
+
+            int[] count = new int[26];
+            for (char c : x.toCharArray()) {
+                count[c - 'a']++;
+            }
+
+            boolean valid = true;
+            for (int i = 0; i < 26; i++) {
+                if (count[i] < target[i]) {
+                    valid = false;
                     break;
-
                 }
             }
-            if(b&&(res.equals("") || x.length()< res.length()))
-            {
-                res=x;
-            }
 
+            if (valid) res = x;
         }
+
         return res;
     }
 }
