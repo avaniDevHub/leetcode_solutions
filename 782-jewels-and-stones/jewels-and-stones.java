@@ -9,7 +9,7 @@ class Solution {
         int count=0;
         for(char s: stones.toCharArray())
         {
-            if(isjewel[s])
+            if(isjewel[s]== true)
             {
                 count++;
             }
